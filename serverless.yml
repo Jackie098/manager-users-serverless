@@ -1,0 +1,31 @@
+service: aws-node-user-manager
+
+frameworkVersion: '2'
+
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  lambdaHashingVersion: 20201221
+  region: sa-east-1
+  memorySize: 256
+  httpApi:
+    cors: true
+
+functions:
+  createUser:
+    handler: src/routes/handler.createUser
+    description: To create a new user
+    timeout: 10
+    events:
+      - httpApi: 'POST /user'
+  
+  listUsers:
+    handler: src/routes/handler.listUsers
+    description: To list all the users
+    timeout: 10
+    events:
+      - httpApi: 'GET /user'
+
+plugins:
+  - serverless-offline
