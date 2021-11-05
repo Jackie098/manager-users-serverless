@@ -11,6 +11,8 @@ provider:
   memorySize: 256
   httpApi:
     cors: true
+  environment:
+    SLS_DEBUG: '*'
 
 functions:
   createUser:
@@ -26,6 +28,20 @@ functions:
     timeout: 10
     events:
       - httpApi: 'GET /user'
+  
+  updateUser:
+    handler: src/routes/handler.updateUser
+    description: To update one users
+    timeout: 10
+    events:
+      - httpApi: 'PUT /user/{id}'
+
+  deleteUser:
+    handler: src/routes/handler.deleteUser
+    description: To delete one user
+    timeout: 10
+    events:
+      - httpApi: 'DELETE /user/{id}'
 
 plugins:
   - serverless-offline

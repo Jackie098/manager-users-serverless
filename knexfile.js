@@ -1,15 +1,20 @@
 // Update with your config settings.
+const dotenv = require('dotenv');
+dotenv.config()
 
 module.exports = {
 
   development: {
     client: 'pg',
     connection: {
-      database: 'uxtmowcq',
-      user: 'uxtmowcq',
-      host: 'kesavan.db.elephantsql.com',
-      port: '5432',
-      password: '2du46kV3nTgEo-RVNjfyo0ngi5sRmrOH',
+      database: process.env.BD,
+      user: process.env.BD_USER,
+      host: process.env.BD_HOST,
+      port: process.env.BD_PORT,
+      password: process.env.BD_PASS,
+    },
+    pool: {
+      max: 10,
     },
     migrations: {
       tableName: 'knex_migrations',
