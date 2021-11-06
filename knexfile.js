@@ -4,12 +4,19 @@ module.exports = {
 
   development: {
     client: 'pg',
+    // connection: {
+    //   database: process.env.DB,
+    //   user: process.env.DB_USER,
+    //   host: process.env.DB_HOST,
+    //   port: process.env.DB_PORT,
+    //   password: process.env.DB_PASS,
+    // },
     connection: {
-      database: process.env.DB,
-      user: process.env.DB_USER,
-      host: process.env.DB_HOST,
-      port: process.env.DB_PORT,
-      password: process.env.DB_PASS,
+      database: "uxtmowcq",
+      user: "uxtmowcq",
+      host: "kesavan.db.elephantsql.com",
+      port: 5432,
+      password: "2du46kV3nTgEo-RVNjfyo0ngi5sRmrOH",
     },
     pool: {
       max: 10,

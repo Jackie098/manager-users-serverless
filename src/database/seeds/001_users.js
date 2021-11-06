@@ -7,21 +7,24 @@ exports.seed = function (knex) {
       return knex('users').insert([
         {
           name: 'jackie',
-          cpf: '12345678989',
+          email: 'jackie@gmail.com',
           age: '2020-05-12',
-          isAdmin: false
+          isAdmin: false,
+          password_hash: null
         },
         {
           name: 'carlos',
-          cpf: '12343212345',
+          email: 'carlos@gmail.com',
           age: '1999-05-12',
-          isAdmin: false
+          isAdmin: false,
+          password_hash: null
         },
         {
           name: 'kaua',
-          cpf: '76556776589',
+          email: 'kaua@gmail.com',
           age: '1989-03-12',
-          isAdmin: false
+          isAdmin: false,
+          password_hash: null
         }
       ]);
     });

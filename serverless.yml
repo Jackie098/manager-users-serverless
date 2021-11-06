@@ -23,29 +23,39 @@ provider:
     SLS_DEBUG: '*'
 
 functions:
+  verify-token:
+    handler: src/app/auth/VerifyToken.auth
+
+  createSuperUser:
+    handler: src/app/superUsers/handler.createSuperUser
+    description: To create a new super user
+    timeout: 10
+    events:
+      - httpApi: 'POST /superUser'
+
   createUser:
-    handler: src/routes/handler.createUser
+    handler: src/app/users/handler.createUser
     description: To create a new user
     timeout: 10
     events:
       - httpApi: 'POST /user'
   
   listUsers:
-    handler: src/routes/handler.listUsers
+    handler: src/app/users/handler.listUsers
     description: To list all the users
     timeout: 10
     events:
       - httpApi: 'GET /user'
   
   updateUser:
-    handler: src/routes/handler.updateUser
+    handler: src/users/handler.updateUser
     description: To update one users
     timeout: 10
     events:
       - httpApi: 'PUT /user/{id}'
 
   deleteUser:
-    handler: src/routes/handler.deleteUser
+    handler: src/users/handler.deleteUser
     description: To delete one user
     timeout: 10
     events:

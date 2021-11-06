@@ -1,12 +1,12 @@
-const knex = require('../database');
+const knex = require('../../database');
 
 module.exports.createUser = async (event) => {
-  const { name, cpf, age } = JSON.parse(event.body);
+  const { name, email, age } = JSON.parse(event.body);
 
   await knex('users')
     .insert({
       name,
-      cpf,
+      email,
       age: new Date(age)
     });
 
@@ -38,11 +38,11 @@ module.exports.listUsers = async (event) => {
 };
 
 module.exports.updateUser = async (event) => {
-  const { name, cpf, age } = JSON.parse(event.body);
+  const { name, email, age } = JSON.parse(event.body);
   const { id } = event.pathParameters;
 
   await knex('users')
-    .update({ name, cpf, age })
+    .update({ name, email, age })
     .where({ id });
 
   return {
