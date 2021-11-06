@@ -2,14 +2,16 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
 const knex = require('../../database');
+const { checkUserByEmail } = require('../../lib/utils');
 
 module.exports.createSuperUser = async (event) => {
   const { name, email, age, password } = JSON.parse(event.body);
 
-  const userExists = await knex('users')
-    .where({ email })
+  // const userExists = await knex('users')
+  //   .where({ email })
+  const userExists = checkUserByEmail(email);
 
-  if (userExists[0]) {
+  if (userExists) {
     return {
       statusCode: 400,
       body: JSON.stringify(
@@ -44,10 +46,10 @@ module.exports.createSuperUser = async (event) => {
 module.exports.createSession = async (event) => {
   const { email, password } = JSON.parse(event.body);
 
-  const user = await knex('users')
-    .where({ email })
+  const userExists = await knex('users')
+    .where({ email, isAdmin: true });
 
-  if (!user[0]) {
+  if (!userExists[0]) {
     return {
       statusCode: 400,
       body: JSON.stringify(
@@ -59,7 +61,7 @@ module.exports.createSession = async (event) => {
     }
   }
 
-  if (!(await bcrypt.compare(password, user[0].password_hash))) {
+  if (!(await bcrypt.compare(password, userExists.password_hash))) {
     return {
       statusCode: 400,
       body: JSON.stringify(
@@ -70,13 +72,15 @@ module.exports.createSession = async (event) => {
     }
   }
 
+  const token = jwt.sign({ id: userExists.id }, process.env.JWT_SECRET, {
+    expiresIn: 2 * 60 * 60 // 2 hours
+  });
+
   return {
     statusCode: 200,
     body: JSON.stringify(
       {
-        session: await jwt.sign({ id: user[0].id }, process.env.JWT_SECRET, {
-          expiresIn: 2 * 60 * 60 // 2 hours
-        })
+        auth: true, token, status: "SUCCESS"
       },
     ),
   };

@@ -14,13 +14,13 @@ provider:
   httpApi:
     cors: true
   environment:
+    SLS_DEBUG: '*'
     DB: ${self:custom.secrets.DB}
     DB_HOST: ${self:custom.secrets.DB_HOST}
     DB_PORT: ${self:custom.secrets.DB_PORT}
     DB_USER: ${self:custom.secrets.DB_USER}
     DB_PASS: ${self:custom.secrets.DB_PASS}
     JWT_SECRET: ${self:custom.secrets.JWT_SECRET}
-    SLS_DEBUG: '*'
 
 functions:
   verify-token:
@@ -45,14 +45,24 @@ functions:
     description: To create a new user
     timeout: 10
     events:
-      - httpApi: 'POST /user'
+      - httpApi: 
+          method: post 
+          path: /user
+          # authorizer: 
+          #   name: verify-token
+          #   identitySource: method.request.header.Authorization
   
   listUsers:
     handler: src/app/users/handler.listUsers
     description: To list all the users
     timeout: 10
     events:
-      - httpApi: 'GET /user'
+      - httpApi: 
+          method: GET
+          path: /user
+          authorizer: 
+            name: verify-token
+            identitySource: method.request.header.Authorization
   
   updateUser:
     handler: src/users/handler.updateUser
