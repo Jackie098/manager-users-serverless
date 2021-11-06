@@ -32,6 +32,13 @@ functions:
     timeout: 10
     events:
       - httpApi: 'POST /superUser'
+  
+  createSession:
+    handler: src/app/superUsers/handler.createSession
+    description: To start a new session
+    timeout: 10
+    events:
+      - httpApi: 'POST /session'
 
   createUser:
     handler: src/app/users/handler.createUser

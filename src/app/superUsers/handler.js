@@ -41,17 +41,43 @@ module.exports.createSuperUser = async (event) => {
   };
 };
 
-module.exports.login = async (event) => {
-  const users = await knex('users')
+module.exports.createSession = async (event) => {
+  const { email, password } = JSON.parse(event.body);
+
+  const user = await knex('users')
+    .where({ email })
+
+  if (!user[0]) {
+    return {
+      statusCode: 400,
+      body: JSON.stringify(
+        {
+          error: 'user doesnt exists',
+          debug: userExists
+        },
+      )
+    }
+  }
+
+  if (!(await bcrypt.compare(password, user[0].password_hash))) {
+    return {
+      statusCode: 400,
+      body: JSON.stringify(
+        {
+          error: 'the password doesnt match',
+        },
+      )
+    }
+  }
 
   return {
     statusCode: 200,
     body: JSON.stringify(
       {
-        users: users
+        session: await jwt.sign({ id: user[0].id }, process.env.JWT_SECRET, {
+          expiresIn: 2 * 60 * 60 // 2 hours
+        })
       },
-      null,
-      2
     ),
   };
 };
