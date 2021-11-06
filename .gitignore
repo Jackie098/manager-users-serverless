@@ -6,7 +6,7 @@ jspm_packages
 .serverless
 
 # Environment
-.env
+secrets.json
 
 # Log
 package-lock.json

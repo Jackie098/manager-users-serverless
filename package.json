@@ -11,7 +11,9 @@
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "offline": "sls offline start --skipCacheInvalidation",
+    "deploy": "sls deploy",
+    "remove": "sls remove"
   },
   "keywords": [],
   "author": "",

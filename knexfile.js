@@ -1,17 +1,15 @@
 // Update with your config settings.
-const dotenv = require('dotenv');
-dotenv.config()
 
 module.exports = {
 
   development: {
     client: 'pg',
     connection: {
-      database: process.env.BD,
-      user: process.env.BD_USER,
-      host: process.env.BD_HOST,
-      port: process.env.BD_PORT,
-      password: process.env.BD_PASS,
+      database: process.env.DB,
+      user: process.env.DB_USER,
+      host: process.env.DB_HOST,
+      port: process.env.DB_PORT,
+      password: process.env.DB_PASS,
     },
     pool: {
       max: 10,

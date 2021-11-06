@@ -2,6 +2,8 @@ service: aws-node-user-manager
 
 frameworkVersion: '2'
 
+custom:
+  secrets: ${file(secrets.json)}
 
 provider:
   name: aws
@@ -12,6 +14,12 @@ provider:
   httpApi:
     cors: true
   environment:
+    DB: ${self:custom.secrets.DB}
+    DB_HOST: ${self:custom.secrets.DB_HOST}
+    DB_PORT: ${self:custom.secrets.DB_PORT}
+    DB_USER: ${self:custom.secrets.DB_USER}
+    DB_PASS: ${self:custom.secrets.DB_PASS}
+    JWT_SECRET: ${self:custom.secrets.JWT_SECRET}
     SLS_DEBUG: '*'
 
 functions:
