@@ -12,6 +12,7 @@ module.exports.createSuperUser = async (event) => {
   if (userExists) {
     return {
       statusCode: 400,
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(
         {
           error: 'user already exists',
@@ -32,6 +33,7 @@ module.exports.createSuperUser = async (event) => {
 
   return {
     statusCode: 201,
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(
       {
         message: 'Completely inserted Super User',
@@ -50,6 +52,7 @@ module.exports.createSession = async (event) => {
   if (!userExists[0]) {
     return {
       statusCode: 400,
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(
         {
           error: 'user doesnt exists or doesnt is an ADM',
@@ -62,6 +65,7 @@ module.exports.createSession = async (event) => {
   if (!(await bcrypt.compare(password, userExists[0].password_hash))) {
     return {
       statusCode: 400,
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(
         {
           error: 'the password doesnt match',
@@ -76,6 +80,7 @@ module.exports.createSession = async (event) => {
 
   return {
     statusCode: 200,
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(
       {
         auth: true, token, status: "SUCCESS", userExists

@@ -8,7 +8,7 @@ module.exports.createUser = async (event) => {
     await checkSession(token);
 
   } catch (err) {
-    return { statusCode: 400, body: JSON.stringify({ log: 'token doesnt validated', error: err }) }
+    return { statusCode: 400, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ log: 'token doesnt validated', error: err }) }
   }
 
   const { name, email, age } = JSON.parse(event.body);
@@ -18,6 +18,7 @@ module.exports.createUser = async (event) => {
   if (userExists) {
     return {
       statusCode: 400,
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(
         {
           error: 'user already exists',
@@ -36,6 +37,7 @@ module.exports.createUser = async (event) => {
 
   return {
     statusCode: 201,
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(
       {
         message: 'Inserted the users',
@@ -52,13 +54,14 @@ module.exports.listUsers = async (event) => {
     await checkSession(token);
 
   } catch (err) {
-    return { statusCode: 400, body: JSON.stringify({ log: 'token doesnt validated', error: err }) }
+    return { statusCode: 400, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ log: 'token doesnt validated', error: err }) }
   }
 
   const users = await knex('users')
 
   return {
     statusCode: 200,
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(
       {
         event: event,
@@ -75,7 +78,7 @@ module.exports.updateUser = async (event) => {
     await checkSession(token);
 
   } catch (err) {
-    return { statusCode: 400, body: JSON.stringify({ log: 'token doesnt validated', error: err }) }
+    return { statusCode: 400, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ log: 'token doesnt validated', error: err }) }
   }
 
   const { name, email, age } = JSON.parse(event.body);
@@ -86,6 +89,7 @@ module.exports.updateUser = async (event) => {
   if (!userExists) {
     return {
       statusCode: 400,
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(
         {
           error: 'user doesnt exists',
@@ -101,6 +105,7 @@ module.exports.updateUser = async (event) => {
 
   return {
     statusCode: 200,
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(
       {
         message: "user updated"
@@ -116,7 +121,7 @@ module.exports.deleteUser = async (event) => {
     await checkSession(token);
 
   } catch (err) {
-    return { statusCode: 400, body: JSON.stringify({ log: 'token doesnt validated', error: err }) }
+    return { statusCode: 400, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ log: 'token doesnt validated', error: err }) }
   }
 
   const { id } = event.pathParameters;
@@ -126,6 +131,7 @@ module.exports.deleteUser = async (event) => {
   if (!userExists) {
     return {
       statusCode: 400,
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(
         {
           error: 'user doesnt exists',
