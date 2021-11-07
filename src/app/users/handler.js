@@ -2,8 +2,10 @@ const knex = require('../../database');
 const { checkUserByEmail, checkUserById, checkSession } = require('../../lib/utils');
 
 module.exports.createUser = async (event) => {
+  const token = event.headers.authorization ? event.headers.authorization : event.headers.Authorization;
+
   try {
-    await checkSession(event.headers.Authorization);
+    await checkSession(token);
 
   } catch (err) {
     return { statusCode: 400, body: JSON.stringify({ log: 'token doesnt validated', error: err }) }
@@ -43,8 +45,11 @@ module.exports.createUser = async (event) => {
 };
 
 module.exports.listUsers = async (event) => {
+  // If is PRODUCTION return "auth" if is OFFLINE return "Auth..."
+  const token = event.headers.authorization ? event.headers.authorization : event.headers.Authorization;
+
   try {
-    await checkSession(event.headers.Authorization);
+    await checkSession(token);
 
   } catch (err) {
     return { statusCode: 400, body: JSON.stringify({ log: 'token doesnt validated', error: err }) }
@@ -64,8 +69,10 @@ module.exports.listUsers = async (event) => {
 };
 
 module.exports.updateUser = async (event) => {
+  const token = event.headers.authorization ? event.headers.authorization : event.headers.Authorization;
+
   try {
-    await checkSession(event.headers.Authorization);
+    await checkSession(token);
 
   } catch (err) {
     return { statusCode: 400, body: JSON.stringify({ log: 'token doesnt validated', error: err }) }
@@ -74,7 +81,7 @@ module.exports.updateUser = async (event) => {
   const { name, email, age } = JSON.parse(event.body);
   const { id } = event.pathParameters;
 
-  const userExists = checkUserById(id);
+  const userExists = await checkUserById(id);
 
   if (!userExists) {
     return {
@@ -103,8 +110,10 @@ module.exports.updateUser = async (event) => {
 };
 
 module.exports.deleteUser = async (event) => {
+  const token = event.headers.authorization ? event.headers.authorization : event.headers.Authorization;
+
   try {
-    await checkSession(event.headers.Authorization);
+    await checkSession(token);
 
   } catch (err) {
     return { statusCode: 400, body: JSON.stringify({ log: 'token doesnt validated', error: err }) }
@@ -112,7 +121,7 @@ module.exports.deleteUser = async (event) => {
 
   const { id } = event.pathParameters;
 
-  const userExists = checkUserById(id);
+  const userExists = await checkUserById(id);
 
   if (!userExists) {
     return {

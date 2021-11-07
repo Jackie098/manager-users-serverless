@@ -52,8 +52,8 @@ functions:
       - httpApi: 
           method: post 
           path: /user
-          # authorizer: 
-          #   name: verify-token
+          authorizer: 
+            name: userJWTAuthorizer
   
   listUsers:
     handler: src/app/users/handler.listUsers
@@ -63,8 +63,8 @@ functions:
       - httpApi: 
           method: GET
           path: /user
-          # authorizer: 
-          #   name: verify-token
+          authorizer: 
+            name: userJWTAuthorizer
   
   updateUser:
     handler: src/app/users/handler.updateUser
