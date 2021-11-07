@@ -1,10 +1,17 @@
 const knex = require('../../database');
-const { checkUserByEmail, getUserFromToken } = require('../../lib/utils');
+const { checkUserByEmail, checkUserById, checkSession } = require('../../lib/utils');
 
 module.exports.createUser = async (event) => {
+  try {
+    await checkSession(event.headers.Authorization);
+
+  } catch (err) {
+    return { statusCode: 400, body: JSON.stringify({ log: 'token doesnt validated', error: err }) }
+  }
+
   const { name, email, age } = JSON.parse(event.body);
 
-  const userExists = checkUserByEmail(email);
+  const userExists = await checkUserByEmail(email);
 
   if (userExists) {
     return {
@@ -36,21 +43,11 @@ module.exports.createUser = async (event) => {
 };
 
 module.exports.listUsers = async (event) => {
-  const { id } = await getUserFromToken(event.headers.Authorization);
+  try {
+    await checkSession(event.headers.Authorization);
 
-  const userExists = await knex('users')
-    .where({ id })
-
-  if (!userExists) {
-    return {
-      statusCode: 400,
-      body: JSON.stringify(
-        {
-          error: 'user doesnt exists',
-          debug: userExists
-        },
-      )
-    }
+  } catch (err) {
+    return { statusCode: 400, body: JSON.stringify({ log: 'token doesnt validated', error: err }) }
   }
 
   const users = await knex('users')
@@ -67,10 +64,17 @@ module.exports.listUsers = async (event) => {
 };
 
 module.exports.updateUser = async (event) => {
+  try {
+    await checkSession(event.headers.Authorization);
+
+  } catch (err) {
+    return { statusCode: 400, body: JSON.stringify({ log: 'token doesnt validated', error: err }) }
+  }
+
   const { name, email, age } = JSON.parse(event.body);
   const { id } = event.pathParameters;
 
-  const userExists = checkUserByEmail(email);
+  const userExists = checkUserById(id);
 
   if (!userExists) {
     return {
@@ -99,9 +103,16 @@ module.exports.updateUser = async (event) => {
 };
 
 module.exports.deleteUser = async (event) => {
+  try {
+    await checkSession(event.headers.Authorization);
+
+  } catch (err) {
+    return { statusCode: 400, body: JSON.stringify({ log: 'token doesnt validated', error: err }) }
+  }
+
   const { id } = event.pathParameters;
 
-  const userExists = checkUserByEmail(email);
+  const userExists = checkUserById(id);
 
   if (!userExists) {
     return {

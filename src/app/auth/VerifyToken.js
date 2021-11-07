@@ -27,12 +27,14 @@ const generatePolicy = (principalId, effect, resource) => {
 module.exports.auth = (event, context, callback) => {
   const token = event.authorizationToken.replace("Bearer ", "");
 
-  if (!token)
+  if (!token) {
     return callback(null, 'Unauthorized');
+  }
 
   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-    if (err)
+    if (err) {
       return callback(null, 'Unauthorized');
+    }
 
     return callback(null, generatePolicy(decoded.id, 'Allow', event.methodArn))
   });

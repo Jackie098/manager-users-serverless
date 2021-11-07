@@ -7,9 +7,7 @@ const { checkUserByEmail } = require('../../lib/utils');
 module.exports.createSuperUser = async (event) => {
   const { name, email, age, password } = JSON.parse(event.body);
 
-  // const userExists = await knex('users')
-  //   .where({ email })
-  const userExists = checkUserByEmail(email);
+  const userExists = await checkUserByEmail(email);
 
   if (userExists) {
     return {
@@ -54,14 +52,14 @@ module.exports.createSession = async (event) => {
       statusCode: 400,
       body: JSON.stringify(
         {
-          error: 'user doesnt exists',
+          error: 'user doesnt exists or doesnt is an ADM',
           debug: userExists
         },
       )
     }
   }
 
-  if (!(await bcrypt.compare(password, userExists.password_hash))) {
+  if (!(await bcrypt.compare(password, userExists[0].password_hash))) {
     return {
       statusCode: 400,
       body: JSON.stringify(
@@ -72,7 +70,7 @@ module.exports.createSession = async (event) => {
     }
   }
 
-  const token = jwt.sign({ id: userExists.id }, process.env.JWT_SECRET, {
+  const token = jwt.sign({ id: userExists[0].id }, process.env.JWT_SECRET, {
     expiresIn: 2 * 60 * 60 // 2 hours
   });
 
@@ -80,7 +78,7 @@ module.exports.createSession = async (event) => {
     statusCode: 200,
     body: JSON.stringify(
       {
-        auth: true, token, status: "SUCCESS"
+        auth: true, token, status: "SUCCESS", userExists
       },
     ),
   };

@@ -13,6 +13,10 @@ provider:
   memorySize: 256
   httpApi:
     cors: true
+    authorizers:
+      userJWTAuthorizer:
+        type: request
+        functionName: verify-token
   environment:
     SLS_DEBUG: '*'
     DB: ${self:custom.secrets.DB}
@@ -50,7 +54,6 @@ functions:
           path: /user
           # authorizer: 
           #   name: verify-token
-          #   identitySource: method.request.header.Authorization
   
   listUsers:
     handler: src/app/users/handler.listUsers
@@ -60,19 +63,18 @@ functions:
       - httpApi: 
           method: GET
           path: /user
-          authorizer: 
-            name: verify-token
-            identitySource: method.request.header.Authorization
+          # authorizer: 
+          #   name: verify-token
   
   updateUser:
-    handler: src/users/handler.updateUser
+    handler: src/app/users/handler.updateUser
     description: To update one users
     timeout: 10
     events:
       - httpApi: 'PUT /user/{id}'
 
   deleteUser:
-    handler: src/users/handler.deleteUser
+    handler: src/app/users/handler.deleteUser
     description: To delete one user
     timeout: 10
     events:
